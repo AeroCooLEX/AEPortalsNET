@@ -154,7 +154,7 @@ namespace aeportalsnet
             }
         }
 
-        // ИСПРАВЛЕННЫЙ МЕТОД: UpdatePortalName с чистым голубым цветом (как у меток транслокатора)
+        // ИСПРАВЛЕННЫЙ МЕТОД: UpdatePortalName с голубым цветом (cyan)
         public void UpdatePortalName(string newName, IPlayer player)
         {
             if (Api?.Side != EnumAppSide.Server) return;
@@ -171,11 +171,11 @@ namespace aeportalsnet
                 {
                     Api.Logger.Notification($"[aeportalsnet] Found owner player: {ownerPlayer.PlayerName}, creating waypoint...");
                     
-                    // ИСПОЛЬЗУЕМ: чистый голубой цвет (как у меток транслокатора)
-                    // RGB: 0, 255, 255 - яркий голубой (циан)
-                    int portalColor = ColorUtil.ColorFromRgba(0, 255, 255, 255);
+                    // ИСПОЛЬЗУЕМ: ярко-голубой цвет (cyan) - RGB: 0, 255, 255
+                    // Используем ColorUtil.ToRgba для правильного формата
+                    int portalColor = ColorUtil.ToRgba(255, 0, 255, 255); // a=255, r=0, g=255, b=255
                     
-                    Api.Logger.Notification($"[aeportalsnet] Using pure cyan color for waypoint");
+                    Api.Logger.Notification($"[aeportalsnet] Using cyan color (0,255,255) for waypoint");
                     
                     var waypointUtil = new PortalWaypointUtil(ownerPlayer);
                     bool result = waypointUtil.AddWaypoint(Pos, newName, portalColor, "spiral", true);
@@ -262,7 +262,8 @@ namespace aeportalsnet
                             (float)(random.NextDouble() - 0.5) * 0.03f
                         );
                         
-                        int color = 0x4C00FFFF;
+                        // Голубой цвет для частиц
+                        int color = ColorUtil.ToRgba(255, 0, 255, 255); // a=255, r=0, g=255, b=255
                         
                         capi.World.SpawnParticles(
                             1f,
