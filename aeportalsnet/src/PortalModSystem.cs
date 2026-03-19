@@ -115,14 +115,14 @@ namespace aeportalsnet
                     BlockPos targetPos = playerPortalManager.GetPortalPosition(player.PlayerUID, message.PortalName);
                     if (targetPos != null)
                     {
-                        api.World.PlaySoundAt(new AssetLocation("game:sounds/block/teleporter"), player.Entity, null, false, 16f);
+                        // УБИРАЕМ звук до телепортации - оставляем только телепортацию
                         
                         player.Entity.TeleportTo(targetPos.X, targetPos.Y, targetPos.Z);
                         player.Entity.Pos.X = targetPos.X + 0.5;
                         player.Entity.Pos.Y = targetPos.Y + 1.0;
                         player.Entity.Pos.Z = targetPos.Z + 0.5;
                         
-                        api.World.PlaySoundAt(new AssetLocation("game:sounds/block/teleporter"), player.Entity, null, false, 16f);
+                        // УБИРАЕМ звук после телепортации
                         
                         PortalRegistry.ResetPlayerDialogStateForAllPortals(player.PlayerUID);
                     }
@@ -138,12 +138,14 @@ namespace aeportalsnet
             base.StartClientSide(api);
             capi = api;
 
+            // На клиенте звук теперь полностью управляется из GuiDialogPortalSelection
+            // Поэтому здесь убираем обработчик звука
             api.Network.GetChannel("aeportalsnet")
                 .SetMessageHandler<PortalListMessage>((message) =>
                 {
                     if (message.PortalNames != null && message.PortalNames.Count > 0)
                     {
-                        api.World.PlaySoundAt(new AssetLocation("game:sounds/block/teleporter"), 0, 0, 0, null, false, 16f);
+                        // НЕ воспроизводим звук здесь - он будет в диалоге с нарастанием
                         
                         GuiDialogPortalSelection selectionDialog = new GuiDialogPortalSelection(capi, message.PortalNames);
                         selectionDialog.TryOpen();
